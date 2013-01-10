@@ -7,7 +7,6 @@
     MKMapView *mapView;
     NSMutableArray *pins;
     int idAnn;
-    NSString *mode;
 }
 
 - (id)init
@@ -32,30 +31,30 @@
 {
     [super viewDidLoad];
     [self setMap];
-    [self gotoLocation];
     [self drawMarkers];
-    UIButton *bottomDisclosure = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    [bottomDisclosure addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToMarker)]];
-    calloutView.rightAccessoryView = bottomDisclosure;
 }
 
 - (void)setMap
 {
+    // setting the map
     mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)];
     mapView.delegate = self;
     calloutView = [SMCalloutView new];
     calloutView.delegate = self;
     [self.view addSubview:mapView];
-}
-
-- (void)gotoLocation
-{
+    
+    // show this location
     MKCoordinateRegion newRegion;
     newRegion.center.latitude = 43.25;
     newRegion.center.longitude = 76.92;
     newRegion.span.latitudeDelta = 0.1;
     newRegion.span.longitudeDelta = 0.1;
     [mapView setRegion:newRegion animated:YES];
+    
+    // adding a button in CalloutView
+    UIButton *bottomDisclosure = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    [bottomDisclosure addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToMarker)]];
+    calloutView.rightAccessoryView = bottomDisclosure;
 }
 
 - (void)drawMarkers
@@ -79,6 +78,7 @@
 
 - (void)goToMarker
 {
+    // Change this for your case
     NSDictionary *item = [self.stocks objectAtIndex:idAnn];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Ура!"
                                                     message:[item objectForKey:@"title"]
@@ -105,7 +105,6 @@
     
     if ([view isMemberOfClass:[CustomPinAnnotationView class]])
     {
-        //NSLog(@"!!!%i", view.idAnn);
         idAnn = view.idAnn;
     }
     
@@ -120,11 +119,14 @@
 #pragma mark - SMCalloutView
 
 - (void)popupMapCalloutView {
+    
+    // Change this for creating your Callout View
+    
     UIView *customView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 260, 88)];
-    UIImageView *photo = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 88.0, 88.0)];
     
     NSDictionary *item = [self.stocks objectAtIndex:idAnn];
     
+    UIImageView *photo = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 88.0, 88.0)];
     photo.image = [UIImage imageNamed:[item objectForKey:@"img"]];
     photo.contentMode = UIViewContentModeScaleAspectFit;
     photo.layer.cornerRadius = 15.0;
